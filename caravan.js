@@ -25,7 +25,6 @@ class Caravan {
             this.notify(`Left ${droppedGuns} guns behind`, 'bad');
         }
 
-
         while(this.food && this.capacity <= this.weight) {
             this.food--;
             this.weight -= trail.foodWeight;
@@ -58,7 +57,18 @@ class Caravan {
     }
 
     step() {
-
+        this.eat();
+        this.checkWeight();
+        this.updateDist();
+        this.stateCheck();
+        this.updateIndex();
+        this.day += 1;
+        if(Math.random() < .15){
+            trail.randomEvent();
+        }
+        if(this.running){
+            setTimeout(this.step.bind(this), 300)
+        }
     }
 
     stateCheck() {
@@ -71,7 +81,7 @@ class Caravan {
             this.running = false;
         }
         if(this.distance >= trail.winDistance) {
-            thi.notify("You Win");
+            this.notify("You Win");
             this.running = false;
         }
     }
@@ -84,8 +94,8 @@ class Caravan {
         }
     }
 
-    notify() {
-        document.getElementById('updates-area').innerHTML = '<div class="update-' + type + '">Day '+ Math.ceil(this.day) + ': ' + message+'</div>'
+    notify(message, type) {
+        document.getElementById('updates-area').innerHTML += '<div class="update-' + type + '">Day '+ Math.ceil(this.day) + ': ' + message+'</div>'
     }
 
     updateIndex() {
@@ -97,7 +107,6 @@ class Caravan {
         document.getElementById('stat-money').innerHTML = this.money;
         document.getElementById('stat-firepower').innerHTML = this.weapons;
         document.getElementById('stat-weight').innerHTML = Math.ceil(this.weight) + '/' + this.capacity;
-        // document.getElementById('caravan').style.left = (380 * this.distance/trail.winDistance) + 'px';
-
+        document.getElementById('caravan').style.left = (380 * this.distance/trail.winDistance) + 'px';
     }
 };
