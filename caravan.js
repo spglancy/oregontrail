@@ -73,15 +73,15 @@ class Caravan {
 
     stateCheck() {
         if(this.crew <= 0) {
-            this.notify("Everyone died... RIP");
+            this.notify("Everyone died... RIP", 'negative');
             this.running = false;
         }
         if(this.food <= 0) {
-            this.notify("Everyone starved... RIP");
+            this.notify("Everyone starved... RIP", 'negative');
             this.running = false;
         }
         if(this.distance >= trail.winDistance) {
-            this.notify("You Win");
+            this.notify("You Win", 'positive');
             this.running = false;
         }
     }

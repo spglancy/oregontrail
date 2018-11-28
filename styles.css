@@ -11,6 +11,10 @@ body {
   font-family: Courier;
 }
 
+h1 {
+    font-size: 3em;
+}
+
 .hidden {
   display: none;
 }
@@ -22,6 +26,12 @@ body {
 #journey {
   height: 100%;
   background-color: #5F9FFF;
+  display: grid;
+  grid-template-columns: 1fr 2fr 5fr;
+  grid-template-rows: 1fr 2fr 2fr;
+  grid-template-areas: 's u p'
+                       'b u e'
+                       '. . .';
 }
 
 #event {
@@ -33,30 +43,60 @@ body {
   position: relative;
   width: 400px;
   margin: 10px;
-}
-
-#trees {
-  width: 100%;
-  image-rendering: pixelated;
-}
-
-#caravan {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
+  grid-area: p;
 }
 
 #stats-area {
   background-color: white;
-  float: left;
-  height: 150px;
-  width: 156px;
+  height: 200px;
+  width: 175px;
   margin: 10px;
   padding: 10px;
   font-size: 14px;
+  grid-area: s;
 }
 
+.buttons {
+    grid-area: b;
+}
 
+#event-area {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    grid-area: e;
+    height: 100%;
+    width: 100%;
+}
+
+#event-display {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+
+}
+
+#event-area button {
+    width: 100px;
+    height: 70px;
+}
+
+#caravan {
+    position: relative;
+    top: 35%;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+}
+
+#trees {
+    position: relative;
+    width: 135%;
+    height: 125px;
+}
 
 .stat-value {
   float: right;
@@ -71,6 +111,7 @@ body {
   padding: 10px;
   font-size: 12px;
   overflow-y: scroll;
+  grid-area: u;
 }
 
 .update-positive {
