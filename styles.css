@@ -11,6 +11,10 @@ body {
   font-family: Courier;
 }
 
+button{
+    border-radius: 10px;
+}
+
 h1 {
     font-size: 3em;
 }
@@ -61,7 +65,7 @@ h1 {
 }
 
 #event-area {
-    display: none;
+    display: block;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
@@ -70,13 +74,26 @@ h1 {
     width: 100%;
 }
 
-#event-display {
+#shop{
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#fight-display{
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#shop-display {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     width: 100%;
-
 }
 
 #event-area button {
@@ -126,14 +143,6 @@ h1 {
   color: #90908F;
 }
 
-#shop {
-  float: left;
-  background-color: white;
-  margin: 10px;
-  padding: 10px;
-  height: 90px;
-  width: 350px;
-}
 
 .product {
   float: left;
@@ -143,11 +152,6 @@ h1 {
   font-size: 12px;
 }
 
-#shop button {
-  clear: both;
-  float: left;
-  margin: 5px;
-}
 
 #attack {
   float: left;

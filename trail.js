@@ -20,7 +20,8 @@ class Trail {
     }
 
     randomEvent(){
-        let event = events[Math.floor(Math.random() * 11)];
+        const event = events[Math.floor(Math.random() * 14)];
+        // const event = events[12];
         caravan.notify(event.text, event.notification);
         if(event.type == 'STAT-CHANGE'){
             if(event.stat == 'crew'){
@@ -41,22 +42,107 @@ class Trail {
             const item2 = document.getElementById("item2");
             const item3 = document.getElementById("item3");
             const item4 = document.getElementById("item4");
-            const shop = document.getElementById("event-area");
+            const leave = document.getElementById("leave");
+            const shop = document.getElementById("shop");
             shop.style.display = "flex";
-            item1.innerHTML = `${event.products[1].qty} ${event.products[1].item} for ${event.products[1].price}$`;
-            item2.innerHTML = `${event.products[2].qty} ${event.products[2].item} for ${event.products[2].price}$`;
-            item3.innerHTML = `${event.products[3].qty} ${event.products[3].item} for ${event.products[3].price}$`;
-            item4.innerHTML = `${event.products[0].qty} ${event.products[0].item} for ${event.products[0].price}$`;
-            document.getElementById("leave").addEventListener("click", function(){
+            item1.innerHTML = `${event.products[0].qty} ${event.products[0].item} for ${event.products[0].price}$`;
+            item2.innerHTML = `${event.products[1].qty} ${event.products[1].item} for ${event.products[1].price}$`;
+            item3.innerHTML = `${event.products[2].qty} ${event.products[2].item} for ${event.products[2].price}$`;
+            item4.innerHTML = `${event.products[3].qty} ${event.products[3].item} for ${event.products[3].price}$`;
+            let resume = function(){
                 caravan.pause();
                 shop.style.display = "none";
-            });
-            item1.addEventListener("click", function(){
-                caravan.event.products[1].item += event.products[1].qty;
-            });
+                caravan.step();
+                var new_element1 = item1.cloneNode(true);
+                var new_element2 = item2.cloneNode(true);
+                var new_element3 = item3.cloneNode(true);
+                var new_element4 = item4.cloneNode(true);
+                var new_element5 = leave.cloneNode(true);
+                item1.parentNode.replaceChild(new_element1, item1);
+                item2.parentNode.replaceChild(new_element2, item2);
+                item3.parentNode.replaceChild(new_element3, item3);
+                item4.parentNode.replaceChild(new_element4, item4);
+                leave.parentNode.replaceChild(new_element5, leave);
+            }
+            leave.addEventListener("click", () => {resume()});
+            let buy = function(index){
+                let product = event.products[index].item;
+                if(caravan.money > event.products[index].price){
+                switch(product){
+                    case 'food':
+                    caravan.food += event.products[index].qty;
+                    break;
+                    case 'oxen':
+                    caravan.oxen += event.products[index].qty;
+                    break;
+                    case 'firepower':
+                    caravan.weapons += event.products[index].qty;
+                    break;
+                    case 'crew':
+                    caravan.crew += event.products[index].qty;
+                }
+                caravan.notify(`Bought ${event.products[index].qty} ${event.products[index].item}`)
+                caravan.money -= event.products[index].price;
+                caravan.updateIndex();
+                }else{
+                    caravan.notify("Not Enough Money")
+                }
+            }
+            item1.addEventListener("click",() => {buy(0)});
+            item2.addEventListener("click",() => {buy(1)});
+            item3.addEventListener("click",() => {buy(2)});
+            item4.addEventListener("click",() => {buy(3)});
+
             //unhide the html
         } else if(event.type == 'ATTACK'){
-
+            caravan.pause();
+            const display = document.getElementById("fight-display");
+            const run = document.getElementById("run");
+            const fight = document.getElementById("fight");
+            display.style.display = "flex";
+            let firepower = Math.ceil(10 * Math.random());
+            caravan.notify(event.text, event.notification)
+            let damage = Math.ceil(Math.max(0, firepower * 2 * Math.random() - caravan.weapons));
+            fight.addEventListener('click', function(){
+                if(damage == 0){
+                    caravan.notify("You beat them with no casualties!", 'positive')
+                }
+                else if(caravan.crew > damage){
+                    caravan.crew -= damage;
+                    caravan.notify(`${damage} people were killed in battle`, 'negative');
+                } else if(damage > caravan.crew){
+                    caravan.notify("Everyone died in battle");
+                    caravan.running = false;
+                }
+                caravan.updateIndex();
+                caravan.pause();
+                caravan.step();
+                display.style.display = "none";
+                var new_run = run.cloneNode(true);
+                run.parentNode.replaceChild(new_run, run);
+                var new_fight = fight.cloneNode(true);
+                fight.parentNode.replaceChild(new_fight, fight);
+            });
+            run.addEventListener('click', function(){
+                if(damage == 0){
+                    caravan.notify("You got away with no casualties!", 'positive')
+                }
+                else if(caravan.crew > damage){
+                    caravan.crew -= Math.floor(damage/2);
+                    caravan.notify(`${damage} people were killed running away`, 'negative');
+                } else if(damage > caravan.crew){
+                    caravan.notify("Everyone died running away");
+                    caravan.running = false;
+                }
+                caravan.updateIndex();
+                caravan.pause();
+                caravan.step();
+                display.style.display = "none";
+                var new_run = run.cloneNode(true);
+                run.parentNode.replaceChild(new_run, run);
+                var new_fight = fight.cloneNode(true);
+                fight.parentNode.replaceChild(new_fight, fight);
+            });
         }
     }
     refresh() {
